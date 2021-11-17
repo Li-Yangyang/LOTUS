@@ -6,7 +6,6 @@ sympy>=1.6.2
 h5py>=2.10.0
 astropy>=3.2.1
 joblib==1.0.1
-rbf==2021.01.13+13.gd5792e8
 numdifftools==0.9.39
 scikit-learn==0.23.2
 pymc3==3.7
@@ -14,3 +13,4 @@ theano==1.0.4
 tqdm
 torch
 gpytorch
+rbf
