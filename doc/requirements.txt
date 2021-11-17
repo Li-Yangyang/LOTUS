@@ -11,8 +11,6 @@ scikit-learn
 pymc3
 theano
 tqdm
-torch
-gpytorch
 rbf
 autodoc
 sphinxcontrib-napoleon
