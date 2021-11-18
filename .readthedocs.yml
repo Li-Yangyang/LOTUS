@@ -14,4 +14,4 @@ python:
   system_packages: true
   
 conda:
-  environment: docs/environment.yml 
+  environment: doc/environment.yml 
