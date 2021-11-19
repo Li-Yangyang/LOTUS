@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import theano
-import torch
+
 import theano.tensor as tt
 import numpy as np
 
@@ -39,6 +39,7 @@ class GenerateMets(theano.Op):
                     generated_mets.append(predict_y)
                     
             if self.mgcog.interp_method == "SKIGP":
+                import torch
                 generated_mets = []
                 for i in range(len(models)):
                     predict_x = torch.from_numpy(np.array([[theta[0], theta[1], theta[2], ews[i]]])).to(torch.float)

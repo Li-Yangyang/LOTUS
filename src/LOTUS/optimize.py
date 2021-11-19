@@ -14,10 +14,8 @@ from scipy.optimize import differential_evolution, shgo
 from sympy import Array
 from sympy.abc import e
 
-import torch, gpytorch
-
 from .utils import slope_measure
-from .interpolation import full_mul_poly, solve_poly
+from .interpolation.multipoly_interp import full_mul_poly, solve_poly
 
 
 class StellarOptimization:

@@ -5,6 +5,12 @@ import codecs
 NAME = "LOTUS"
 PACKAGES = find_packages(where='src')
 META_PATH = os.path.join("src", "LOTUS", "__init__.py")
+EXTRA_REQUIRE = {
+    "advanced-interp": ["rbf", "torch", "gpytorch"],
+    "doc": [
+        "sphinx-book-theme",
+    ],
+}
 CLASSIFIERS = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
@@ -18,7 +24,7 @@ CLASSIFIERS = [
 HERE = os.path.dirname(os.path.realpath(__file__))
 
 def readme():
-    with open("README.rst") as f:
+    with open("README.md") as f:
         return f.read()
 
 with open('requirements.txt') as infd:
@@ -51,7 +57,7 @@ setup(
     author=find_meta("author"),
     author_email=find_meta("email"),
     maintainer=find_meta("author"),
-    url=find_meta("uri"),
+    url=find_meta("url"),
     license=find_meta("license"),
     description=find_meta("description"),
     long_description=readme(),
@@ -63,6 +69,6 @@ setup(
     python_requires=">=3.7",
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
+    extras_require=EXTRA_REQUIRE,
     zip_safe=False
 )
-

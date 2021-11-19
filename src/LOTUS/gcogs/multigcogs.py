@@ -13,13 +13,12 @@ import h5py
 import joblib
 import tarfile
 
-import gpytorch, torch
 from astropy.stats.info_theory import bayesian_info_criterion_lsq
 
 from .gcog import SingleGCOG
 from .utils import *
 
-from ..interpolation import *
+#from ..interpolation import *
 from ..config import *
 from ..utils import generate_ranges
 
@@ -340,6 +339,7 @@ class PolyMultiCGOG(MultiGCOG):
         the line doesn't pass the precision test
     
     """
+    from ..interpolation.multipoly_interp import MultivariatePolynomialInterpolation
     def __init__(self, star, stellar_type, obs_path, exp_cutoff=0, ew_error=5,
                  ewlibpath=None, 
                  ewdiffpath=None,
@@ -446,6 +446,7 @@ class RBFMultiCGOG(MultiGCOG):
     k: int
         No of nearest points when interpolating
     """
+    #from ..interpolation.rbf_interp import RBFRegressionInterpolation
     def __init__(self, star, stellar_type, obs_path, exp_cutoff=0, met_error=0.1,
                  ewlibpath="./LOTUS/EWLIB_largergrid2_v0.h5", 
                  metdiffpath="./LOTUS/package_data/metdiff",
@@ -528,7 +529,7 @@ class RBFMultiCGOG(MultiGCOG):
                     
             
 class SKIGpMultiCGOG(MultiGCOG):
-    
+    #from ..interpolation.gp_interp import GPInterpolation
     def __init__(self, star, stellar_type, obs_path, cal="nlte", exp_cutoff=0, met_error=0.3,
                  ewlibpath="./LOTUS/EWLIB_largergrid2_v0.h5", 
                  metdiffpath="./LOTUS/package_data/metdiff"):
