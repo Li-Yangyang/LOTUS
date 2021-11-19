@@ -4,7 +4,7 @@ import codecs
 
 NAME = "lotus-nlte"
 PACKAGES = find_packages(where='src')
-META_PATH = os.path.join("src", "LOTUS", "__init__.py")
+META_PATH = os.path.join("src", "lotus-nlte", "__init__.py")
 EXTRA_REQUIRE = {
     "advanced-interp": ["rbf", "torch", "gpytorch"],
     "doc": [
