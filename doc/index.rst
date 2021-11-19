@@ -35,22 +35,11 @@ Contents
    :caption: User Guide
 
    user/install
-   user/api
-   user/dev
-   changes.rst
-
+   
 .. toctree::
    :maxdepth: 1
    :caption: Tutorials
 
-   tutorials/about.md
-   tutorials/autodiff.md
-   tutorials/intro-to-pymc3.md
-   tutorials/data-and-models.md
-   tutorials/light-delay.md
-   tutorials/reparameterization.md
-   Case studies <https://gallery.exoplanet.codes>
-   celerite2 <https://celerite2.readthedocs.io>
 
 
 
