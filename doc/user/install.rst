@@ -27,7 +27,7 @@ The recommended method of installing *LOTUS* is with `pip
 
 .. code-block:: bash
 
-      python -m pip install -U lotus-nlte
+      python -m pip install lotus-nlte
 
 .. _source:
 
@@ -70,4 +70,4 @@ You can install them by:
 
 .. code-block:: bash
 
-      python -m pip install -U "lotus-nlte[advanced-interp]"
+      python -m pip install "lotus-nlte[advanced-interp]"
