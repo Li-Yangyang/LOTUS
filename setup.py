@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import os, sys, re
 import codecs
 
-NAME = "LOTUS"
+NAME = "lotus-nlte"
 PACKAGES = find_packages(where='src')
 META_PATH = os.path.join("src", "LOTUS", "__init__.py")
 EXTRA_REQUIRE = {
