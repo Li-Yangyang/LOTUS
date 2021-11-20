@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-__all__ = ["__version__", "gcogs", "optimize", "interpolation", "utils", "sampling", "plot"]
+__all__ = ["__version__", "gcogs", "optimize", "interpolation", "utils", "sampling", "plot", "config"]
+from .config import *
 from . import utils
 from .interpolation import *
 from .gcogs.multigcogs import PolyMultiCGOG
@@ -8,7 +9,7 @@ from . import optimize
 from . import sampling
 from . import plot
 #from .LOTUS_version import __version__
-from .LOTUS_version import version as __version__
+from .lotus_nlte_version import __version__
 
 __author__ = "Yangyang Li"
 __email__ = "ly95astro@gmail.com"

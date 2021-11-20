@@ -1,10 +1,11 @@
 from setuptools import setup, find_packages
+from setuptools.command.install import install as _install
 import os, sys, re
 import codecs
 
-NAME = "lotus-nlte"
+NAME = "lotus_nlte"
 PACKAGES = find_packages(where='src')
-META_PATH = os.path.join("src", "lotus-nlte", "__init__.py")
+META_PATH = os.path.join("src", NAME, "__init__.py")
 EXTRA_REQUIRE = {
     "advanced-interp": ["rbf", "torch", "gpytorch"],
     "doc": [
@@ -43,6 +44,10 @@ def find_meta(meta: str, meta_file: str = read(META_PATH)) -> str:
         return meta_match.group(1)
     raise RuntimeError("Unable to find __{meta}__ string.".format(meta=meta))
 
+#class Install(_install):
+#    def run(self):
+#        _install.do_egg_install(self)
+#        from lotus_nlte.config import *
 
 setup(
     name=NAME,
@@ -62,8 +67,10 @@ setup(
     long_description_content_type="text/markdown",
     packages=PACKAGES,
     package_dir={"": "src"},
-    package_data={'LOTUS': ['package_data/gcoglib/*', 'package_data/ewdiff/*', 'package_data/linelist/*']},
+    package_data={'lotus_nlte': ['package_data/linelist/*']},
     include_package_data=True,
+    #cmdclass={'install': Install},
+    #setup_requires=['lotus-nlte'],
     python_requires=">=3.7",
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
