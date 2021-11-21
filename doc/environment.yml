@@ -10,5 +10,6 @@ dependencies:
   - matplotlib
   - pandas
   - pip
+  - nbsphinx
   - pip:
       - ..[doc]
