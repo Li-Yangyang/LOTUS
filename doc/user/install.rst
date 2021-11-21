@@ -39,10 +39,8 @@ From Source
 
 .. code-block:: bash
 
-      git lfs install --skip-repo
       git clone https://github.com/Li-Yangyang/LOTUS
       cd LOTUS
-      git lfs pull
       python -m pip install -e .
 
 The following dependencies are required to install it successfully:
