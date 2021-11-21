@@ -18,8 +18,7 @@ CLASSIFIERS = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
 ]
 
 HERE = os.path.dirname(os.path.realpath(__file__))
@@ -71,7 +70,7 @@ setup(
     include_package_data=True,
     #cmdclass={'install': Install},
     #setup_requires=['lotus-nlte'],
-    python_requires=">=3.7",
+    python_requires="==3.7",
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRA_REQUIRE,
