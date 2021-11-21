@@ -9,7 +9,11 @@ dependencies:
   - scipy
   - matplotlib
   - pandas
+  - sphinx>=1.6
+  - pandoc
+  - nbconvert!=5.4
+  - ipykernel
   - pip
-  - nbsphinx
   - pip:
       - ..[doc]
+      - nbsphinx
