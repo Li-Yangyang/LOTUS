@@ -13,7 +13,6 @@ def get_url(file_name, record_id="5716361"):
 
 def is_writable(path):
     # Ensure that it exists.
-    print(path)
     if not os.path.exists(path):
         return False
 
@@ -37,7 +36,7 @@ def is_writable(path):
     # Otherwise, we'll assume it's writable.
     # [xx] should we do other checks on other platforms?
     return True
-    
+
 def default_download_dir(directory):
         """
         thanks to nltk downloader function in:
@@ -67,7 +66,7 @@ def default_download_dir(directory):
                 return directory
         elif is_writable(directory):
             return directory
-        
+
 
         # On Windows, use %APPDATA%
         if sys.platform == "win32" and "APPDATA" in os.environ:

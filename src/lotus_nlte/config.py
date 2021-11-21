@@ -24,16 +24,15 @@ EWDIFF_LIB = EWDIFF_DIR + "ewdiff_v0.tar.gz"
 if not os.path.exists(GCOG_NLTE_LIB):
     GCOG_DIR = default_download_dir(GCOG_DIR)
     GCOG_NLTE_LIB = GCOG_DIR + "nlte_v0.tar.gz"
-    print(GCOG_DIR, GCOG_NLTE_LIB)
     url = get_url("nlte_v0.tar.gz")
     download_file(url, GCOG_DIR)
-    
+
 if not os.path.exists(GCOG_LTE_LIB):
     GCOG_DIR = default_download_dir(GCOG_DIR)
     GCOG_LTE_LIB = GCOG_DIR + "lte_v0.tar.gz"
     url = get_url("lte_v0.tar.gz")
     download_file(url, GCOG_DIR)
-    
+
 if not os.path.exists(EWDIFF_LIB):
     EWDIFF_DIR = default_download_dir(EWDIFF_DIR)
     EWDIFF_LIB = GCOG_DIR + "ewdiff_v0.tar.gz"
