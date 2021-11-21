@@ -41,15 +41,18 @@ extensions = [
   'sphinx.ext.ifconfig',
   'sphinx.ext.viewcode',
   'sphinx.ext.githubpages',
+  'nbsphinx'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+source_suffix = ".rst"
+master_doc = "index"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = ["_build"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -65,22 +68,19 @@ html_sourcelink_suffix = ""
 html_title = "LOTUS"
 #html_logo = "_static/logo.png"
 #html_favicon = "_static/favicon.png"
+html_static_path = ['_static']
 html_theme_options = {
-    "path_to_docs": "docs",
+    "path_to_docs": "doc",
     "repository_url": "https://github.com/Li-Yangyang/LOTUS",
     "repository_branch": "main",
-    "launch_buttons": {
-        "binderhub_url": "https://mybinder.org",
-        "notebook_interface": "classic",
-    },
     "use_edit_page_button": True,
     "use_issues_button": True,
     "use_repository_button": True,
     "use_download_button": True,
 }
-# jupyter_execute_notebo
-
+# jupyter_execute_noteboob="off"
+#jupyter_execute_notebooks = "cache"
+#execution_timeout = -1
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']

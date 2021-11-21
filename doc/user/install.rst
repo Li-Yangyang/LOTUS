@@ -3,10 +3,14 @@
 Installation
 ============
 
-.. note:: ``LOTUS`` requires Python 3.7 and later.
+.. note:: ``LOTUS`` requires Python 3.7.
 
-Therefore before installing this code, it is recommended that create
-an independent environment via anaconda:
+This code uses ``Theano`` as backend tool to realize MCMC sampling via
+``PyMC3`` but ``Theano`` has been deprecated after version 1.0.5 and has been
+transferred into ``Aesara`` for ``PyMC3>=3.10.0``. In our future version, we will
+update this code with up-to-date ``PyMC3`` but now we choose to use previous version,
+which need to freeze ``python==3.7``. Therefore before installing this code,
+it is recommended that create an independent environment via anaconda:
 
 .. code-block:: bash
 

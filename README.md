@@ -6,7 +6,7 @@ data from high resolution spectral survey. It can provide extremely accurate
 measurement of stellar parameters compared with non-spectroscipic analysis from
 benchmark stars.
 
-Full documentation at [here]https://lotus-nlte.readthedocs.io
+Full documentation at [lotus-nlte.readthedocs.io](https://lotus-nlte.readthedocs.io)
 
 ## Installation
 
@@ -15,7 +15,7 @@ The quickest way to get started is to use [pip](https://pip.pypa.io):
 ```bash
 python -m pip install lotus-nlte
 ```
-Notice that _LOTUS_ requires Python 3.7 and later. You might create an independent environment to run this code
+Notice that _LOTUS_ requires Python 3.7. You might create an independent environment to run this code.
 
 ## Usage
 
