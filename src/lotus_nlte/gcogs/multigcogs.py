@@ -42,16 +42,14 @@ class MultiGCOG:
         Path of the observation ew list of the target star
     cal: str
         Types of derivation, e.g. "lte" or "nlte"
-    exp_cutoff: int or float:
+    exp_cutoff: int or float: default is 0
         Cutoff of excitation potential during the derivation, in the unit of ev
     ewlibpath: str
         The path for the libary of EW, it must be a h5 file
-
-    Methods
-    -------
-    pipelines:
-        method that can select lines with accurate and precice abundance prediction
-
+    interpolation: bool, default: False
+        True: use interpolated GCOG
+        False: get GCOG from EW library
+        
     """
 
     __slots__ = ['star', 'stellar_type', 'exp_cutoff', "obs_wavelength", "obs_ep",
@@ -97,7 +95,7 @@ class MultiGCOG:
 
     def pipelines(self):
         """
-        method that can select lines with accurate and precice abundance prediction
+        Method that can select lines with accurate and precise abundance prediction
 
         Returns
         -------
@@ -338,7 +336,7 @@ class PolyMultiGCOG(MultiGCOG):
     multivariate polynomial regresssion
 
     Sub class parameters
-    ----------
+    --------------------
     ew_error: float or int
         Max of the deviation of EW allowed for the predicted EW from
         multivariate polynomial model

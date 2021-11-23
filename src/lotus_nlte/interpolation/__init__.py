@@ -1,3 +1,6 @@
 # -*- coding: utf-8 -*-
 
-__all__ = ["multipoly_interp"]
+__all__ = ["MultivariatePolynomialInterpolation",
+          ]
+
+from .multipoly_interp import MultivariatePolynomialInterpolation

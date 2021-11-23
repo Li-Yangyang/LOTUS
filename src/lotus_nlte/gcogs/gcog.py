@@ -5,6 +5,7 @@ Created on Tue Nov  9 15:12:58 2021
 
 @author: yangyangli
 """
+__all__ = ['SingleGCOG']
 
 import numpy as np
 import pandas as pd
@@ -35,17 +36,24 @@ class SingleGCOG:
             {spectral type, e.g. F, G, K}/{giant or subgiant or dwarf}/{metal_rich or metal_poor or very_metal_poor}
         or
         the estimation of your atmospheric parameters in such form:
-            {{T_low}_{T_high}/{logg_low}_{logg_high}/{feh_low}_{feh_high}}
-    ewlibpath: str
-        The path for the libary of EW, it must be a h5 file
+            {T_low}_{T_high}/{logg_low}_{logg_high}/{[Fe/H]_low}_{[Fe/H]_high}
+    interpolated: bool, default: False
+        True: use interpolated GCOG
+        False: get GCOG from EW library
+    ewlibpath: None or str
+        if ``interpolted==False``, this must be assigned for assemble GCOG as 
+        the path for the libary of EW, it must be a h5 file
+        if ``interpolated==True``, this can be None
+    keys: None or list of str
+        if ``interpolted==False``, this should be the target keys of ewlib
+        if ``interpolated=True``, this can be None
+    atmos_pars: None or list
+        if ``interpolted==False``, this should be the target keys of ewlib, 
+        the shape of the list is (N_selected_gridpoints, 4)
+        if ``interpolated==True``, this can be None
     cal: str
         Types of EW, e.g. "lte" or "nlte"
-
-    Methods
-    -------
-    assemble_hyper_surface:
-        Collect EW and other stellar parameters from library and assemble them
-        into an array as a shape of (N_selected_gridpoints, 5)
+        
     """
 
     __slots__ = ["wavelength", "ep", "element", "stellar_type", "interpolated",
@@ -77,6 +85,19 @@ class SingleGCOG:
             self._hyper_surface = None
 
     def load_model(self):
+        """
+        Load interpolated model for a single line 
+
+        Raises
+        ------
+        ValueError
+            ``interpolated==False``, there is no interpolated model to import
+
+        Returns
+        -------
+        m : sklearn.pipeline.Pipeline
+            interpolated model
+        """
         if not self.interpolated:
             raise ValueError("Your model hasn't been interpolated yet")
         import joblib
@@ -89,6 +110,32 @@ class SingleGCOG:
         return m
 
     def plot_interpolated_cog(self, teff, logg, vt, ews=None):
+        """
+        Plot interpolated Curve of Growth
+
+        Parameters
+        ----------
+        teff : int or float
+            which Teff the COG is at
+        logg : int or float
+            which logg the COG is at
+        vt : int or float
+            which microturbulen velocity the COG is at
+        ews : list or ndarray, optional
+            . The default is None, then EWs are using from
+            1 $m\overset{\circ}A$ to 100$m\overset{\circ}A$.
+
+        Raises
+        ------
+        ValueError
+            ``interpolated==False``, there is no interpolated model to import
+
+        Returns
+        -------
+        fig : matplotlib.figure.Figure
+            plot for COG
+
+        """
         if not self.interpolated:
             raise ValueError("Your model hasn't been interpolated yet")
         import matplotlib.pyplot as plt

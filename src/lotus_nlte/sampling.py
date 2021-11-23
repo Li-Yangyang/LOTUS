@@ -13,6 +13,35 @@ from .theano_op.predict import GenerateMets
 import theano.tensor as tt
 
 def slicesampling(log_likelihood, mgcog, priors, priors_stderr, bounds, ndraws=1000, ntunes=200, chains=4):
+    """
+    Slice sampling wrapper
+
+    Parameters
+    ----------
+    log_likelihood : lotus_nlte.optimize.StellarOptimization.log_likelihood
+        calculate log likelihood function
+    mgcog : lotus_nlte.gcogs.MultiGCOG
+        Instance of MultiGCOG
+    priors : list or ndarray
+        Priors of Teff, logg, vt
+    priors_stderr : list or ndarray
+        Estimated priors standard deviation
+    bounds : list of tuple
+        boundary for parameters
+    ndraws : int, optional
+        Number of draws. The default is 1000.
+    ntunes : int, optional
+        Number of tunning(burning). The default is 200.
+    chains : int, optional
+        Number of chains. The default is 4.
+
+    Returns
+    -------
+    trace : MultiTrace
+        Contains all samples up to the current iteration
+
+
+    """
     logl = LogLikeWithGrad(log_likelihood)
     _generate_mets = GenerateMets(mgcog)
     #ndraws = 1000  # number of draws from the distribution

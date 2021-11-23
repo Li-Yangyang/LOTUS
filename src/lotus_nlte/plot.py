@@ -16,7 +16,41 @@ plt.rcParams['ytick.minor.visible']=True
 def plot_optimized_equilibrium(star, opt_stellarpars, fit_pars,
                                REWs1, REWs2, chis1, chis2,
                                abunds1, abunds2, abunds1_err=None, abunds2_err=None):
+    """
+    Plot for abundances vs reduced EWs and abundances vs excitation potential given
+    stellar parameters.
 
+    Parameters
+    ----------
+    star : str
+        Name of star
+    opt_stellarpars : dict
+        Contains Teff, logg, vt and their uncertainty
+    fit_pars : list
+        [dict(linear fitting of A vs REW), dict(linear fitting of A vs chi)]
+    REWs1 : list or ndarray
+        Reduced EWs for FeI
+    REWs2 : list or ndarray
+        Reduced EWs for FeII
+    chis1 : list or ndarray
+        Excitation potential for FeI
+    chis2 : list or ndarray
+        Excitation potential for FeI
+    abunds1 : list of ndarry
+        Abundances of FeI
+    abunds2 : list of ndarry
+        Abundances of FeI
+    abunds1_err :list of ndarray, optional
+        Error of derived abundances of FeI (not implemeted yet). The default is None.
+    abunds2_err : list of ndarray, optional
+        Error of derived abundances of FeII (not implemeted yet). The default is None.
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        plot for equiibira
+
+    """
     title = "%s\n $T_{eff}$ = %.2f $\pm$ %.2f K,\
     $log$g = %.2f $\pm$ %.2f (cm $\\cdot$ $s^{-2}$),\
     $\\left[Fe/H\\right]$ = %.2f $\pm$ %.2f,\
@@ -99,6 +133,11 @@ def plot_results_brute(result, grid, best_vals=True, varlabels=None,
 
     output : str, optional
         Name of the output PDF file (default is 'None')
+        
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        plot for element-wise objective function values at proposed grid points
     """
     from matplotlib.patches import Ellipse
     npars = len(result['var_names'])

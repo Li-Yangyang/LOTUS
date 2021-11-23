@@ -21,6 +21,17 @@ from sklearn.linear_model import LinearRegression
 from ..utils import generate_ranges
 
 class MultivariatePolynomialInterpolation:
+    """
+    Multivariate polynomial interpolator
+
+    Parameters
+    ----------
+    X: list or ndarray, (N,4)
+        [Teff, logg, vt, EW]
+    Y: list or ndarray, (N,1)
+       [Fe/H]
+        
+    """
 
     def __init__(self, X, Y, degree):
         self.X = X
@@ -28,6 +39,20 @@ class MultivariatePolynomialInterpolation:
         self.degree = degree
 
     def fit(self, **kargs):
+        """
+        Compute interpolation.
+
+        Parameters
+        ----------
+        **kargs : dict
+            args into sklearn PolynomicalFeatures and LinearRegression
+
+        Returns
+        -------
+        model : sklearn.pipeline.Pipeline
+            interpolated model
+
+        """
         #X = self.hyper_surface[:,[0,1,3,4]]
         #Y = self.hyper_surface[:,2]
         model = make_pipeline(PolynomialFeatures(degree=self.degree, **kargs), LinearRegression(**kargs))

@@ -74,12 +74,21 @@ def find_closest_model(wl, ep, ele, search_path, interp_method, interpolation, t
         "FeI" or "FeII"
     search_path : str
         designated directory
+    interp_method: str
+        "[2-5]" for multivariate polynomial interpolation
+    interpolation: bool
+        True: use interpolated GCOG
+        False: get GCOG from EW library
+    tarfile: tarfile.Tarfile or None
+        if None, search closest model in a directory
+        else search in a tarfile
 
     Returns
     -------
     list:
         length > 0 : closest model found;
         length = 0 : can't find closest model
+        
     """
     
     for w in [wl-0.01, wl, wl+0.01]:

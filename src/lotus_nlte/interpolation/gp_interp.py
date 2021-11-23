@@ -34,6 +34,25 @@ class GPRegressionModel(gpytorch.models.ExactGP):
         return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
 
 class GPInterpolation:
+    """
+    Gaussian Process regression interpolator (Not fully implemented yet)
+
+    Parameters
+    ----------
+    x: list or ndarray, (N,4)
+        [Teff, logg, vt, EW]
+    y: list or ndarray, (N,1)
+       [Fe/H]
+    stellar_type: str
+        The stellar type of your star, like:
+                {spectral type, e.g. F, G, K}/{giant or subgiant or dwarf}/{metal_rich or metal_poor or very_metal_poor}
+        or
+        the estimation of your atmospheric parameters in such form:
+                {T_low}_{T_high}/{logg_low}_{logg_high}/{[Fe/H]_low}_{[Fe/H]_high}
+    training_iter: int
+        number of training iterations
+        
+    """
     import torch
     def __init__(self, x, y, stellar_type, training_iter=50):
         self.train_x = torch.from_numpy(x).to(torch.float)

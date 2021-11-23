@@ -19,6 +19,14 @@ from .interpolation.multipoly_interp import full_mul_poly, solve_poly
 
 
 class StellarOptimization:
+    """
+    Base class for stellar parameter opimization
+    
+    Parameters:
+        mgcog: lotus_nlte.gcog.MultiGCOG
+        physicaltol: torelence for stopping the iteration of optimization
+    
+    """
 
     def __init__(self, mgcog, physicaltol=1e-5):
         self.mgcog = mgcog
@@ -38,6 +46,20 @@ class StellarOptimization:
         self.callback = self._callback
 
     def checkintols(self, xk):
+        """
+        Check if proposal match with the convergence condition
+
+        Parameters
+        ----------
+        xk : list
+            proposal, [Teff, logg, vt]
+
+        Returns
+        -------
+        bool
+            Whether to stop the optimization
+
+        """
         generated_met = []
         if self.mgcog.interp_method != "SKIGP":
             for i in range(len(self.mgcog.models)):
@@ -101,11 +123,34 @@ class StellarOptimization:
 
     def _bounds(self):
         if not self.limited_feii:
-            self.bounds = [(4000, 6350), (0.5, 5.0), (0.5, 3.0)]
+            self.bounds = [(4000, 6850), (0.5, 5.0), (0.5, 3.0)]
         else:
-            self.bounds = [(4000, 6350), (0.5, 5.0), (0.5, 3.0), (-4.0, -0.5)]
+            self.bounds = [(4000, 6850), (0.0, 5.0), (0.5, 3.0), (-3.5, 0.5)]
 
-    def generate_met(self, model, teff, logg, vt, ew, **kargs):
+    def generate_met(self, model, teff, logg, vt, ew):
+        """
+        Generate metalicity for single line given the interpolated model and proposed
+        stellar paramters and its observed EW.
+
+        Parameters
+        ----------
+        model : sklearn.pipeline.Pipeline
+            interpolated model
+        teff : int or float
+            Teff
+        logg : int or float
+            logg
+        vt : int or float
+            micro-turbulence velocity
+        ew : int or float
+            observed EW
+
+        Returns
+        -------
+        predict_y : number
+            Predicted metalicity given by Teff, logg, vt and EW
+
+        """
         if self.mgcog.interp_method == "[2-5]":
             #This function is for those with enough feii lines
             if np.ndim(teff) == 0 and np.ndim(logg) == 0 and np.ndim(vt) == 0 and np.ndim(ew) == 0:
@@ -141,6 +186,34 @@ class StellarOptimization:
         return mean
 
     def obs_calculation(self, gen_met, obs_ele, obs_ew, obs_wavelength, obs_ep, gen_met_err=None):
+        """
+        Calculate observed slope between excitation potentials and abundances, 
+        the slope between reduced equivalent widths and abundances and the difference 
+        between abundances of FeI and FeII
+
+        Parameters
+        ----------
+        gen_met : list
+            Predicted metalicity for every lines
+        obs_ele : ndarray
+            Species for the observed lines
+        obs_ew : ndarray
+            EWs for the observed lines
+        obs_wavelength : ndarray
+            Wavelength for the observed lines
+        obs_ep : ndarray
+            Excitation potential for the observed lines
+        gen_met_err : ndarray, optional
+            Not implemented yet. The default is None.
+
+        Returns
+        -------
+        List
+            [the slope between excitation potentials and abundances, 
+            the slope between reduced equivalent widths and abundances,
+            the difference between abundances of FeI and FeII]
+
+        """
 
         idx_fei = np.where(np.array(obs_ele) =="FeI")
         idx_feii = np.where(np.array(obs_ele) =="FeII")
@@ -166,6 +239,20 @@ class StellarOptimization:
             return [popt_Achi1[0], pcov_Achi1[0][0]], [popt_AREW1[0], pcov_AREW1[0][0]]
 
     def minimisation_function(self, stellar_parameters):
+        """
+        Calculate objective function given proposed stellar parameters
+
+        Parameters
+        ----------
+        stellar_parameters : list
+            [Teff, logg, vt]
+
+        Returns
+        -------
+        Number
+            objective function
+
+        """
         generated_met = []
         if self.mgcog.interp_method != "SKIGP":
             for i in range(len(self.mgcog.models)):
@@ -224,12 +311,52 @@ class StellarOptimization:
             return self.minimisation_function(stellar_parameters)
 
     def fun_der(self, stellar_parameters):
+        """
+        Calculate first derivatives
+
+        Parameters
+        ----------
+        stellar_parameters : list
+            stellar parameter at the minimization of function
+
+        Returns
+        -------
+        ndarray
+            Jacobian function
+
+        """
         return Jacobian(lambda x: self.minimisation_function(x))(stellar_parameters).ravel()
 
     def fun_hess(self, stellar_parameters, **kargs):
+        """
+        Calculate second derivatives
+
+        Parameters
+        ----------
+        stellar_parameters : list
+            stellar parameter at the minimization of function
+        **kargs : dict
+            args feed to Hessian matrix functon
+
+        Returns
+        -------
+        ndarray
+            Hessian matrix
+
+        """
         return Hessian(lambda x: self.minimisation_function(x), **kargs)(stellar_parameters)
 
     def uncertainty(self, result):
+        """
+        Uncertainty estimation according given the Hessian Matrix
+
+        Parameters
+        ----------
+        result : dict
+            result containing optimization result
+
+
+        """
         from numpy import linalg
         if self.mgcog.interp_method != "SKIGP":
             if "RBF" in self.mgcog.interp_method:
@@ -263,10 +390,43 @@ class StellarOptimization:
             result.stderrs = np.where(np.isnan(result.stderrs), np.inf, result.stderrs)
 
     def optimize(self, method_func, callback=None, **kargs):
+        """
+        Optimization wrapper
+
+        Parameters
+        ----------
+        method_func : func
+            scipy.optimize.differential_evolution or scipy.optimization.shgo
+        callback : func, None
+            Callback function. The default is None.
+        **kargs : dict
+            args feed into method_func
+
+        Returns
+        -------
+        func
+            optimization progress
+
+        """
         cb = callback
         return method_func(self.minimisation_function, callback=cb, **kargs)
 
     def _set_up_meshgrids(self, steps=[50, 0.1, 0.1]):
+        """
+        Setup grids given the stellar type and calculate objective function at these
+        grid points
+
+        Parameters
+        ----------
+        steps : list, optional
+            steps for Teff, logg, vt. The default is [50, 0.1, 0.1].
+
+        Returns
+        -------
+        list
+            Grid points in the shape of (N,4)
+
+        """
         from multiprocessing import Pool
         Teff_v = np.arange(self.bounds[0][0], self.bounds[0][1], steps[0])
         logg_v = np.arange(self.bounds[1][0], self.bounds[1][1], steps[1])
@@ -294,6 +454,20 @@ class StellarOptimization:
         return [Teff_grid, logg_grid, vt_grid, new_f_grid]
 
     def log_likelihood(self,theta):
+        """
+        Calculate loglikehood function at the proposed stellar parameters
+
+        Parameters
+        ----------
+        theta : list or ndarray
+            [Teff, logg, vt]
+
+        Returns
+        -------
+        Number
+            loglikehood function
+
+        """
         stellar_parameters = theta[:3]
         log_f = theta[-1]#.detach().numpy()
         generated_met = []
@@ -342,6 +516,15 @@ class StellarOptimization:
         return -0.5 * np.sum(models ** 2 / sigma2s + np.log(sigma2s))
 
 class DiffEvoStellarOptimization(StellarOptimization):
+    """
+    Optimizer using Differential Evolution Algorithm, wrapped from 
+    scipy.optimize.differential_evolution
+    
+    Parameters:
+        bounds: list of tuples, None
+        if None, use the boundary of our grid
+    
+    """
     def __init__(self, mgcog, bounds=None, physicaltol=1e-5):
         super().__init__(mgcog, physicaltol)
         #self.model = model
@@ -378,6 +561,15 @@ class DiffEvoStellarOptimization(StellarOptimization):
         return results
 
 class ShgoStellarOptimization(StellarOptimization):
+    """
+    Optimizer using SHG optimization, wrapped from 
+    scipy.optimize.shgo
+    
+    Parameters:
+        bounds: list of tuples, None
+        if None, use the boundary of our grid
+    
+    """
     def __init__(self, mgcog, bounds=None, physicaltol=1e-5):
         super().__init__(mgcog, physicaltol)
         #self.model = model
