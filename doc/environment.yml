@@ -8,11 +8,12 @@ dependencies:
   - numpy
   - scipy
   - matplotlib
-  - pandas
+  - pandas==0.24.2
   - sphinx>=1.6
   - pandoc
   - nbconvert!=5.4
   - ipykernel
+  - corner
   - pip
   - pip:
       - ..[doc]
