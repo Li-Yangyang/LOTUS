@@ -66,7 +66,7 @@ setup(
     long_description_content_type="text/markdown",
     packages=PACKAGES,
     package_dir={"": "src"},
-    package_data={'lotus_nlte': ['package_data/linelist/*']},
+    package_data={'lotus_nlte': ['package_data/linelist/*', 'test/data/*']},
     include_package_data=True,
     #cmdclass={'install': Install},
     #setup_requires=['lotus-nlte'],
