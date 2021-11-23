@@ -18,7 +18,6 @@ GCOG
    :inherited-members:
    
 .. autofunction:: lotus_nlte.gcogs.utils.get_keys_and_atmos_pars
-   :inherited-members:
    
 .. autofunction:: lotus_nlte.gcogs.utils.find_closest_model
    
