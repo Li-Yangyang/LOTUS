@@ -340,3 +340,8 @@ def docs_setup():
     plt.rcParams["font.sans-serif"] = ["Liberation Sans"]
     plt.rcParams["font.cursive"] = ["Liberation Sans"]
     plt.rcParams["mathtext.fontset"] = "custom"
+    plt.rc('axes', linewidth=2)
+    plt.rcParams['xtick.minor.visible']=True
+    plt.rcParams['ytick.minor.visible']=True
+    plt.rcParams['xtick.direction']="in"
+    plt.rcParams['ytick.direction']="in"
