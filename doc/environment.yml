@@ -13,7 +13,6 @@ dependencies:
   - pandoc
   - nbconvert!=5.4
   - ipykernel
-  - corner
   - pip
   - pip:
       - ..[doc]
