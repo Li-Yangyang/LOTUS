@@ -50,7 +50,7 @@ From Source
 The following dependencies are required to install it successfully:
 
 - `numpy <https://numpy.org>`_>=1.16.4
-- `pandas <https://pandas.pydata.org/>`_>=0.25.0
+- `pandas <https://pandas.pydata.org/>`_==0.24.2
 - `scipy <https://scipy.org/>`_>=1.5.0
 - `scikit-learn <https://scikit-learn.org/stable/>`_ ==0.23.2
 - `sympy <https://www.sympy.org/en/index.html>`_>=1.6.2
@@ -62,6 +62,7 @@ The following dependencies are required to install it successfully:
 - `numdifftools <https://github.com/pbrod/numdifftools>`_ ==0.9.39
 - `matplotlib <https://matplotlib.org/>`_>=3.1.3 (for plotting)
 - `tqdm <https://tqdm.github.io/>`_
+- `corner <https://corner.readthedocs.io/en/latest/>`_
 
 The rest will be installed as well but are used for future more ways of
 interpolation:
