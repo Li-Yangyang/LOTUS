@@ -13,10 +13,10 @@ plt.rc('axes', linewidth=2)
 plt.rcParams['xtick.minor.visible']=True
 plt.rcParams['ytick.minor.visible']=True
 
-def plot_optimized_equilibrium(star, opt_stellarpars, fit_pars, 
-                               REWs1, REWs2, chis1, chis2, 
+def plot_optimized_equilibrium(star, opt_stellarpars, fit_pars,
+                               REWs1, REWs2, chis1, chis2,
                                abunds1, abunds2, abunds1_err=None, abunds2_err=None):
-    
+
     title = "%s\n $T_{eff}$ = %.2f $\pm$ %.2f K,\
     $log$g = %.2f $\pm$ %.2f (cm $\\cdot$ $s^{-2}$),\
     $\\left[Fe/H\\right]$ = %.2f $\pm$ %.2f,\
@@ -24,19 +24,19 @@ def plot_optimized_equilibrium(star, opt_stellarpars, fit_pars,
                                       opt_stellarpars["logg"][0], opt_stellarpars["logg"][1],
                                       opt_stellarpars["feh"][0], opt_stellarpars["feh"][1],
                                       opt_stellarpars["Vmic"][0], opt_stellarpars["Vmic"][1])
-    
+
     from scipy.optimize import curve_fit
-    
+
     def func_lw(x_lw, slope, offset):
         return slope*x_lw + offset
-    
+
     if abunds1_err is not None:
         popt_Achi1, pcov_Achi1 = curve_fit(func_lw, chis1, abunds1, sigma=abunds1_err)
         popt_AREW1, pcov_AREW1 = curve_fit(func_lw, REWs1, abunds1, sigma=abunds1_err)
     else:
         popt_Achi1, pcov_Achi1 = curve_fit(func_lw, chis1, abunds1)
         popt_AREW1, pcov_AREW1 = curve_fit(func_lw, REWs1, abunds1)
-    
+
     fig, ax = plt.subplots(2,1, figsize=(12,7))
 
     for a in ax:
@@ -47,7 +47,7 @@ def plot_optimized_equilibrium(star, opt_stellarpars, fit_pars,
         a.tick_params(axis='y', which='minor', size=3, width=1.5, labelsize=5, direction="in")
         #axe.xaxis.set_minor_locator(tck.AutoMinorLocator())
         #axe.yaxis.set_minor_locator(tck.AutoMinorLocator())
-        
+
     xs = [[REWs1, REWs2], [chis1, chis2]]
     ys = [abunds1, abunds2]
     yerrs = [abunds1_err, abunds2_err]
@@ -66,12 +66,12 @@ def plot_optimized_equilibrium(star, opt_stellarpars, fit_pars,
         a.set_ylabel("log$\epsilon$(Fe)", fontsize=15)
         pred_xs = np.array([np.min(np.concatenate(xs[i], axis=0)), np.max(np.concatenate(xs[i], axis=0))])
         pred_a1s = popts[i][1] + popts[i][0] * pred_xs
-        a.plot(pred_xs, pred_a1s, color=cs[0], linestyle="--", 
+        a.plot(pred_xs, pred_a1s, color=cs[0], linestyle="--",
                linewidth=2, label="FeI log$\epsilon$(Fe)vs %s: %.2e $\pm$ %.2e" % (xlabels[i], fit_pars[i][0], fit_pars[i][1]))
         a.legend(loc="upper right", frameon=False)
         a.set_xlim(pred_xs[0]-0.02, pred_xs[1]+0.02)
     plt.subplots_adjust()
-    
+
     return fig
 
 def plot_results_brute(result, grid, best_vals=True, varlabels=None,
@@ -88,8 +88,10 @@ def plot_results_brute(result, grid, best_vals=True, varlabels=None,
     result : :class:`~lmfit.minimizer.MinimizerResult`
         Contains the results from the :meth:`brute` method.
 
-    best_vals : bool, optional
+    best_vals : bool, dict
         Whether to show the best values from the grid search (default is True).
+        if this is a bool, then the parameters in result will be used for ploting;
+        if this a dictionary then values in this dictionary will be used for ploting.
 
     varlabels : list, optional
         If None (default), use `result.var_names` as axis labels, otherwise
@@ -105,8 +107,12 @@ def plot_results_brute(result, grid, best_vals=True, varlabels=None,
     if not varlabels:
         varlabels = result['var_names']
     if best_vals and isinstance(best_vals, bool):
-        best_vals = np.transpose([result["ScipyOptimizeResult"].x, 
+        best_vals = np.transpose([result["ScipyOptimizeResult"].x,
                                   result["ScipyOptimizeResult"].stderrs])
+    if best_vals and isinstance(best_vals, dict):
+        best_vals = np.array([[best_vals["Teff"][0], best_vals["Teff"][1]],
+                              [best_vals["logg"][0], best_vals["logg"][1]],
+                              [best_vals["Vmic"][0], best_vals["Vmic"][1]]])
 
     for i, par1 in enumerate(result['var_names']):
         for j, par2 in enumerate(result['var_names']):
@@ -134,7 +140,7 @@ def plot_results_brute(result, grid, best_vals=True, varlabels=None,
                 ax.set_xticks([])
                 if best_vals.all():
                     ax.axvline(best_vals[i][0], ls='dashed', color='r')
-                    ax.axvspan(best_vals[i][0] - best_vals[i][1], 
+                    ax.axvspan(best_vals[i][0] - best_vals[i][1],
                                best_vals[i][0] + best_vals[i][1],
                                alpha=0.5, color='red')
 
@@ -152,7 +158,7 @@ def plot_results_brute(result, grid, best_vals=True, varlabels=None,
                     ax.set_xlabel(r'$\chi^{2}$', fontsize=15)
                 if best_vals.all():
                     ax.axhline(best_vals[i][0], ls='dashed', color='r')
-                    ax.axhspan(best_vals[i][0] - best_vals[i][1], 
+                    ax.axhspan(best_vals[i][0] - best_vals[i][1],
                                best_vals[i][0] + best_vals[i][1],
                                alpha=0.5, color='red')
 
@@ -176,12 +182,12 @@ def plot_results_brute(result, grid, best_vals=True, varlabels=None,
                     ax.axvline(best_vals[i][0], ls='dashed', color='r')
                     ax.axhline(best_vals[j][0], ls='dashed', color='r')
                     ax.plot(best_vals[i][0], best_vals[j][0], 'rs', ms=3)
-                    ellipse = Ellipse(xy=(best_vals[i][0], best_vals[j][0]), 
-                                      width=best_vals[i][1], height=best_vals[j][1], 
+                    ellipse = Ellipse(xy=(best_vals[i][0], best_vals[j][0]),
+                                      width=best_vals[i][1], height=best_vals[j][1],
                                       edgecolor='r', fc='None', lw=2, alpha=1.0)
                     ax.add_patch(ellipse)
 
-                    
+
                 if j != npars-1:
                     ax.set_xticks([])
                 elif j == npars-1:
@@ -192,7 +198,7 @@ def plot_results_brute(result, grid, best_vals=True, varlabels=None,
 
     if output is not None:
         plt.savefig(output)
-        
+
     return _fig
 
 def plot_ewdiff_vs_stellar_parameters(df, line):
@@ -200,7 +206,7 @@ def plot_ewdiff_vs_stellar_parameters(df, line):
     plt.rcParams['xtick.minor.visible']=True
     plt.rcParams['ytick.minor.visible']=True
     fig, ax = plt.subplots(4, 1, figsize=(12,10))
-    
+
     wl, exp, ion = line.split("_")
     for a in ax:
         a.linewidth = 5
@@ -208,7 +214,7 @@ def plot_ewdiff_vs_stellar_parameters(df, line):
         a.tick_params(axis="y", which="major", size=5, width=2.5, labelsize=10, direction="in")
         a.tick_params(axis='x', which='minor', size=3, width=1.5, labelsize=5, direction="in")
         a.tick_params(axis='y', which='minor', size=3, width=1.5, labelsize=5, direction="in")
-        
+
     xlabels = ['$T_{eff}(K)$', '$log\mathcal{g}(cm\cdot s^{-2})$', '$[Fe/H]$', '$v_{mic}(km\cdot s^{-1})$']
     for i, p in enumerate(['Teff', 'logg', 'feh', 'vt']):
         ax[i].set_xlabel(xlabels[i], fontsize=15)
@@ -224,7 +230,7 @@ def plot_ewdiff_vs_stellar_parameters(df, line):
         if i == 0:
             ax[i].set_title(r"$\lambda={0:s}(\AA)$, ExPot={1:s}ev, Ion={2:s}".format(wl,exp,ion), fontsize=20)
             ax[i].legend(frameon=False)
-        
-    fig.text(0.065, 0.5, r"$\overline{EW_{theo} - EW_{inter}}(m\AA)$", va='center', rotation='vertical', fontsize=15) 
+
+    fig.text(0.065, 0.5, r"$\overline{EW_{theo} - EW_{inter}}(m\AA)$", va='center', rotation='vertical', fontsize=15)
     plt.subplots_adjust(hspace=0.4)
     return fig
