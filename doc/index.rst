@@ -41,3 +41,4 @@ Contents
    :caption: Tutorials
 
    tutorials/quickstart.ipynb
+   tutorials/examples.ipynb
