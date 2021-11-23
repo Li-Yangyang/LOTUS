@@ -4,7 +4,7 @@ __all__ = ["__version__", "gcogs", "optimize", "interpolation", "utils", "sampli
 from .config import *
 from . import utils
 from .interpolation import *
-from .gcogs.multigcogs import PolyMultiCGOG
+from .gcogs.multigcogs import PolyMultiGCOG
 from . import optimize
 from . import sampling
 from . import plot
