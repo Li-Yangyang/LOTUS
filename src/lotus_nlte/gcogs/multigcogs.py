@@ -76,10 +76,11 @@ class MultiGCOG:
             print("All optimizations are based on exist interpolated models and you don't need to interpolate them!")
 
             if self.cal == "lte":
-                self.interptar = tarfile.open(GCOG_LTE_LIB)
+                self.interptar_path = GCOG_LTE_LIB
             else:
-                self.interptar = tarfile.open(GCOG_NLTE_LIB)
-            self.working_dir = self.interptar.getnames()[0] + "/" + self.stellar_type + "/"
+                self.interptar_path = GCOG_NLTE_LIB
+            interptar = tarfile.open(self.interptar_path)
+            self.working_dir = interptar.getnames()[0] + "/" + self.stellar_type + "/"
         else:
             if not self.ewlibpath:
                 raise ValueError("Please assign your EW library!")
@@ -114,16 +115,19 @@ class MultiGCOG:
             #in sklearn toolkit, we have to calculte the model and dump them into files first
             #for later persistent prediction
         else:
+            if self.interp_method == "[2-5]":
+                interptar = tarfile.open(self.interptar_path)
+                difftar = tarfile.open(self.difftar_path)
             exist_mask = []
             for i in range(len(self.obs_wavelength)):
                 fname = find_closest_model(self.obs_wavelength[i], self.obs_ep[i],
                                            self.obs_ele[i], self.working_dir,
                                            self.interp_method, self.interpolation,
-                                           self.interptar)
+                                           interptar)
                 if len(fname) > 0:
-                    m = self._load_model(fname[0], i)
+                    m = self._load_model([interptar, fname[0]])
                     line = fname[0].split("/")[4].split(".sav")[0][:-2]
-                    if self._if_correct_interp(line, m):
+                    if self._if_correct_interp(line, m, difftar):
                         self.models.append(m)
                         if self.interp_method == "SKIGP":
                             self.likelihoods.append(m.likelihood)
@@ -159,17 +163,14 @@ class MultiGCOG:
             self.models = gpytorch.models.IndependentModelList(*self.models)
             self.likelihoods = gpytorch.likelihoods.LikelihoodList(*self.likelihoods)
 
-    def _load_model(self, fname, i):
+    def _load_model(self, handle):
         """
         Interface for load the model, provide for subclass
 
         Parameters
         ----------
-        fname : str
-            path of interpolated model.
-        i : int
-            Index of line.
-
+        handle : optional
+            path or index or tarfile handle of interpolated model.
         """
         pass
 
@@ -294,7 +295,7 @@ class MultiGCOG:
         #Interface for judge if the interpolation is accurate and precise, provide for subclass
         pass
 
-    def remove_outliers(self, abunds):
+    def remove_outliers(self, abunds, **kwargs):
         """
         Remove outliers according to the derived abundance
 
@@ -306,14 +307,20 @@ class MultiGCOG:
         """
         from astropy.stats import sigma_clip, biweight_scale
 
+        if not "stdfunc" in kwargs:
+            from astropy.stats import biweight_scale
+            stdfunc = biweight_scale
+        else:
+            stdfunc = "std"
+
         idx_fei = np.where(np.array(self.obs_ele) =="FeI")
         idx_feii = np.where(np.array(self.obs_ele) =="FeII")
 
         #sigma clip
-        clipped_bound1 = sigma_clip(abunds[idx_fei], stdfunc=biweight_scale, return_bounds=True)[1:]
+        clipped_bound1 = sigma_clip(abunds[idx_fei], stdfunc=stdfunc, return_bounds=True , **kwargs)[1:]
         idx_clipped1 = np.where(((abunds[idx_fei]>=clipped_bound1[0]) & (abunds[idx_fei]<=clipped_bound1[1])))[0]
 
-        clipped_bound2 = sigma_clip(abunds[idx_feii], stdfunc=biweight_scale, return_bounds=True)[1:]
+        clipped_bound2 = sigma_clip(abunds[idx_feii], stdfunc=stdfunc, return_bounds=True, **kwargs)[1:]
         idx_clipped2 = np.where(((abunds[idx_feii]>=clipped_bound2[0]) & (abunds[idx_feii]<=clipped_bound2[1])))[0]
 
         #stack two clipped index
@@ -325,7 +332,7 @@ class MultiGCOG:
         self.obs_ep = self.obs_ep[idx_clipped]
         self.obs_ele = self.obs_ele[idx_clipped]
 
-class PolyMultiCGOG(MultiGCOG):
+class PolyMultiGCOG(MultiGCOG):
     """
     Sub class for General Curve of Growth (GCOG) of multiple lines based on
     multivariate polynomial regresssion
@@ -348,7 +355,7 @@ class PolyMultiCGOG(MultiGCOG):
 
         self.ewdiffpath = ewdiffpath
         self.ew_error = ew_error
-        super(PolyMultiCGOG, self).__init__(star, stellar_type, obs_path, cal,
+        super(PolyMultiGCOG, self).__init__(star, stellar_type, obs_path, cal,
                          exp_cutoff, ewlibpath, interpolation)
         #create directory for save the polynomial test files
         self.interp_method = "[2-5]"
@@ -356,13 +363,14 @@ class PolyMultiCGOG(MultiGCOG):
             if not os.path.exists(self.ewdiffpath+self.stellar_type):
                 os.makedirs(self.ewdiffpath+self.stellar_type)
         else:
-            self.difftar = tarfile.open(EWDIFF_LIB)
+            self.difftar_path = EWDIFF_LIB
 
-    def _load_model(self, fname, i):
-        if self.interpolation:
-            return joblib.load(fname)
-        else:
-            return joblib.load(self.interptar.extractfile(fname))
+    def _load_model(self, handle):
+        if isinstance(handle, str):
+            return joblib.load(handle)
+        if isinstance(handle[0], tarfile.TarFile) and isinstance(handle[1], str):
+            return joblib.load(handle[0].extractfile(handle[1]))
+        raise TypeError("Your model files path or type is not correct.")
 
     def _generate_model(self, s, wl, ep, ele):
 
@@ -396,7 +404,7 @@ class PolyMultiCGOG(MultiGCOG):
         del fewdiff_df, ewdiff_df
         return final_model
 
-    def _if_correct_interp(self, line, m):
+    def _if_correct_interp(self, line, m, difftar=None):
         if self.interpolation:
             ewdiff_file = self.ewdiffpath + self.stellar_type + "/" + line + ".csv"
             if os.path.isfile(ewdiff_file):
@@ -418,8 +426,8 @@ class PolyMultiCGOG(MultiGCOG):
                 mean, std = ewdiff_df["delta_"+self.cal].mean(), ewdiff_df["delta_"+self.cal].std()
 
         else:
-            ewdiff_file = self.difftar.getnames()[0] + "/" + self.stellar_type + "/" + line + ".csv"
-            ewdiff_df = pd.read_csv(self.difftar.extractfile(ewdiff_file))
+            ewdiff_file = difftar.getnames()[0] + "/" + self.stellar_type + "/" + line + ".csv"
+            ewdiff_df = pd.read_csv(difftar.extractfile(ewdiff_file))
             mean, std = ewdiff_df["delta_"+self.cal].mean(), ewdiff_df["delta_"+self.cal].std()
 
         del ewdiff_df
@@ -428,7 +436,7 @@ class PolyMultiCGOG(MultiGCOG):
         else:
             return False
 
-class RBFMultiCGOG(MultiGCOG):
+class RBFMultiGCOG(MultiGCOG):
     """
     Sub class for General Curve of Growth (GCOG) of multiple lines based on
     nearest rbf regresssion
@@ -454,7 +462,7 @@ class RBFMultiCGOG(MultiGCOG):
 
         self.metdiffpath = metdiffpath
         self.met_error = met_error
-        super(RBFMultiCGOG, self).__init__(star, stellar_type, obs_path, cal,
+        super(RBFMultiGCOG, self).__init__(star, stellar_type, obs_path, cal,
                          exp_cutoff, ewlibpath)
         #create directory for save the polynomial test files
         self.kernel = kernel
@@ -463,8 +471,8 @@ class RBFMultiCGOG(MultiGCOG):
         if not os.path.exists(self.metdiffpath+self.stellar_type):
             os.makedirs(self.metdiffpath+self.stellar_type)
 
-    def _load_model(self, fname, i):
-        return joblib.load(fname)
+    def _load_model(self, handle):
+        return joblib.load(handle)
 
     def _generate_model(self, s, wl, ep, ele):
 
@@ -528,7 +536,7 @@ class RBFMultiCGOG(MultiGCOG):
 
 
 
-class SKIGpMultiCGOG(MultiGCOG):
+class SKIGpMultiGCOG(MultiGCOG):
     #from ..interpolation.gp_interp import GPInterpolation
     def __init__(self, star, stellar_type, obs_path, cal="nlte", exp_cutoff=0, met_error=0.3,
                  ewlibpath="./LOTUS/EWLIB_largergrid2_v0.h5",
@@ -537,15 +545,16 @@ class SKIGpMultiCGOG(MultiGCOG):
         self.met_error = met_error
         self.metdiffpath = metdiffpath
 
-        super(SKIGpMultiCGOG, self).__init__(star, stellar_type, obs_path, cal, exp_cutoff, ewlibpath)
+        super(SKIGpMultiGCOG, self).__init__(star, stellar_type, obs_path, cal, exp_cutoff, ewlibpath)
         self.interp_method = "SKIGP"
         self.likelihoods = []
 
         if not os.path.exists(self.metdiffpath+self.stellar_type):
             os.makedirs(self.metdiffpath+self.stellar_type)
 
-    def _load_model(self, fname, i):
+    def _load_model(self, handle):
         #TODO:load tranning data waste time...if we can discard this part in future?
+        
         sg = SingleGCOG(self.obs_wavelength[i],self.obs_ep[i], self.obs_ele[i],
                           self.stellar_type, self.ewlibpath, self.cal, self._keys, self._ini_cents)
         s = sg.assemble_hyper_surface()
