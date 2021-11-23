@@ -20,7 +20,7 @@ benchmark stars as: :math:`\Delta T_{\mathrm{eff}} \lesssim 50 K`, :math:`\Delta
 * Well constrained uncertainty of derived stellar parameters from slice-sampling MCMC
   from `PyMC3 <https://docs.pymc.io>`_.
 * Interpolation of *Curve of Growth* from theoretical EW grid under the assumptions of
-  LTE and Non-LTE
+  LTE and Non-LTE.
 * Visualization of excitation and ionization balance when at the optimal combination
   of stellar parameters.
 
