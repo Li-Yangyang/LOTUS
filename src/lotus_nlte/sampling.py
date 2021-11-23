@@ -11,7 +11,7 @@ import pymc3 as pm
 from .theano_op.likelihood import LogLikeWithGrad
 from .theano_op.predict import GenerateMets
 import theano.tensor as tt
-        
+
 def slicesampling(log_likelihood, mgcog, priors, priors_stderr, bounds, ndraws=1000, ntunes=200, chains=4):
     logl = LogLikeWithGrad(log_likelihood)
     _generate_mets = GenerateMets(mgcog)
@@ -45,14 +45,14 @@ def slicesampling(log_likelihood, mgcog, priors, priors_stderr, bounds, ndraws=1
 
         # use a DensityDist
         pm.DensityDist('likelihood', lambda v: logl(v), observed={'v': theta})
-        
+
         #start = pm.find_MAP(method="powell", vars=[teff, logg])
         #start = pm.find_MAP(start=start, vars=[teff, logg, vt, log_f])
         #start = pmx.optimize(start=start)
         #trace = pm.sample(ndraws, tune=nburn, discard_tuned_samples=True)
-        
+
     with opmodel:
         step = pm.Slice()
-        trace = pm.sample(ndraws, step=step, tune=ntunes, chains=4)
-        
+        trace = pm.sample(ndraws, step=step, tune=ntunes, chains=chains)
+
     return trace
