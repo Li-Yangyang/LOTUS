@@ -35,6 +35,7 @@ Contents
    :caption: User Guide
 
    user/install
+   user/api
 
 .. toctree::
    :maxdepth: 1
