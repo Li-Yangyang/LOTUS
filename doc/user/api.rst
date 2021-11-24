@@ -1,5 +1,3 @@
-.. module:: lotus_nlte
-
 .. _api:
 
 API documentation
@@ -16,6 +14,7 @@ GCOG
    
 .. autoclass:: lotus_nlte.gcogs.PolyMultiGCOG
    :inherited-members:
+   :noindex: lotus_nlte.interpolation.MultivariatePolynomialInterpolation
    
 .. autofunction:: lotus_nlte.gcogs.utils.get_keys_and_atmos_pars
    

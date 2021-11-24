@@ -8,7 +8,6 @@ from .gcogs.multigcogs import PolyMultiGCOG
 from . import optimize
 from . import sampling
 from . import plot
-#from .LOTUS_version import __version__
 from .lotus_nlte_version import __version__
 
 __author__ = "Yangyang Li"
@@ -19,4 +18,3 @@ __description__ = "Determine atmospheric stellar parameters in non-LTE"
 __copyright__ = "Copyright 2021 Yangyang Li"
 __contributors__ = "https://github.com/Li-Yangyang/LOTUs/graphs/contributors"
 __bibtex__ = __citation__ = """TBD"""
-#__version__ = "0.0.1a1"

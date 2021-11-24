@@ -22,8 +22,7 @@ def get_keys_and_atmos_pars(ewlibpath, stellar_type):
         The path for the libary of EW, it must be a h5 file
     stellar_type : str
         The stellar type of your star, like:
-            {spectral type, e.g. F, G, K}/{giant or subgiant or dwarf}/{metal_rich or metal_poor or very_metal_poor}
-        or 
+            {spectral type, e.g. F, G, K}/{giant or subgiant or dwarf}/{metal_rich or metal_poor or very_metal_poor} or 
         the estimation of your atmospheric parameters in such form:
             {{T_low}_{T_high}/{logg_low}_{logg_high}/{feh_low}_{feh_high}}
             

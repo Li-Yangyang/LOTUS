@@ -27,9 +27,11 @@ class MultivariatePolynomialInterpolation:
     Parameters
     ----------
     X: list or ndarray, (N,4)
-        [Teff, logg, vt, EW]
+       [Teff, logg, vt, EW]
     Y: list or ndarray, (N,1)
        [Fe/H]
+    degree: int
+       degree of polynomial 
         
     """
 

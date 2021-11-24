@@ -34,15 +34,14 @@ class MultiGCOG:
         The name of target star
     stellar_type: str:
         The stellar type of your star, like:
-            {spectral type, e.g. F, G, K}/{giant or subgiant or dwarf}/{metal_rich or metal_poor or very_metal_poor}
-        or
+            {spectral type, e.g. F, G, K}/{giant or subgiant or dwarf}/{metal_rich or metal_poor or very_metal_poor} or
         the estimation of your atmospheric parameters in such form:
             {{T_low}_{T_high}/{logg_low}_{logg_high}/{feh_low}_{feh_high}}
     obs_path: str
         Path of the observation ew list of the target star
     cal: str
         Types of derivation, e.g. "lte" or "nlte"
-    exp_cutoff: int or float: default is 0
+    exp_cutoff: int or float
         Cutoff of excitation potential during the derivation, in the unit of ev
     ewlibpath: str
         The path for the libary of EW, it must be a h5 file
@@ -335,8 +334,8 @@ class PolyMultiGCOG(MultiGCOG):
     Sub class for General Curve of Growth (GCOG) of multiple lines based on
     multivariate polynomial regresssion
 
-    Sub class parameters
-    --------------------
+    Parameters
+    ----------
     ew_error: float or int
         Max of the deviation of EW allowed for the predicted EW from
         multivariate polynomial model

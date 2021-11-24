@@ -17,10 +17,9 @@ from .utils import get_keys_and_atmos_pars, find_closest_model
 from ..config import GCOG_LTE_LIB, GCOG_NLTE_LIB
 
 class SingleGCOG:
-    """
-    Base class for General Curve of Growth (GCOG)
+    """Base class for General Curve of Growth (GCOG) 
 
-    This intends for assemble discrete relationship between theoretical EW with
+    This intends for assemble discrete relationship between theoretical EW with 
     other atsmopheric stellar parameters.
 
     Parameters
@@ -31,13 +30,12 @@ class SingleGCOG:
         Target line excitation potential , in unit of ev
     element: str
         "FeI" or "FeII"
-    stellar_type: str:
+    stellar_type: str
         The stellar type of your star, like:
-            {spectral type, e.g. F, G, K}/{giant or subgiant or dwarf}/{metal_rich or metal_poor or very_metal_poor}
-        or
+            {spectral type, e.g. F, G, K}/{giant or subgiant or dwarf}/{metal_rich or metal_poor or very_metal_poor} or
         the estimation of your atmospheric parameters in such form:
             {T_low}_{T_high}/{logg_low}_{logg_high}/{[Fe/H]_low}_{[Fe/H]_high}
-    interpolated: bool, default: False
+    interpolated: bool, optional
         True: use interpolated GCOG
         False: get GCOG from EW library
     ewlibpath: None or str
@@ -51,6 +49,7 @@ class SingleGCOG:
         if ``interpolted==False``, this should be the target keys of ewlib, 
         the shape of the list is (N_selected_gridpoints, 4)
         if ``interpolated==True``, this can be None
+
     cal: str
         Types of EW, e.g. "lte" or "nlte"
         
