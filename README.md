@@ -1,6 +1,6 @@
 <p align="center">
   <br><br>
-  <a href="https://docs.exoplanet.codes">
+  <a href="lotus-nlte.readthedocs.io/en/latest/">
     <img src="https://readthedocs.org/projects/lotus_nlte/badge/?version=latest" alt="Docs">
   </a>
 </p>
