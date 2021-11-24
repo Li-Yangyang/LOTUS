@@ -4,6 +4,7 @@
     <img src="https://readthedocs.org/projects/lotus_nlte/badge/?version=latest" alt="Docs">
   </a>
 </p>
+
 # LOTUS
 _LOTUS_ (non-LTE Optimization Tool Utilized for the derivation of atmospheric
 Stellar parameters) is a python package for the derivation of stellar parameters via _Equivalent Width (EW)_ method with the assumption of
