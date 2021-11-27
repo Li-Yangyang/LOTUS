@@ -1,3 +1,9 @@
+from pkg_resources import DistributionNotFound, get_distribution
+
+try:
+    __version__ = get_distribution("emcee").version
+except DistributionNotFound:
+    __version__ = "unknown version"
 # Configuration file for the Sphinx documentation builder.
 #
 # This file only contains a selection of the most common options. For a full
@@ -22,7 +28,7 @@ copyright = '2021, Yangyang Li'
 author = 'Yangyang Li'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1'
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
