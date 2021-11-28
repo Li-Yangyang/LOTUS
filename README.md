@@ -3,6 +3,8 @@
   <a href="lotus-nlte.readthedocs.io/en/latest/">
     <img src="https://readthedocs.org/projects/lotus_nlte/badge/?version=latest" alt="Docs">
   </a>
+  <a href="https://github.com/Li-Yangyang/LOTUS/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
 </p>
 
 # LOTUS
