@@ -5,6 +5,7 @@
   </a>
   <a href="https://github.com/Li-Yangyang/LOTUS/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
+  </a>
 </p>
 
 # LOTUS
