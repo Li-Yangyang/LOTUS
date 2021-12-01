@@ -31,7 +31,7 @@ The recommended method of installing *LOTUS* is with `pip
 
 .. code-block:: bash
 
-      python -m pip install lotus-nlte
+      python -m pip install lotus-nlte==0.1.1rc2
 
 .. _source:
 
