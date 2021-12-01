@@ -70,7 +70,7 @@ setup(
     include_package_data=True,
     #cmdclass={'install': Install},
     #setup_requires=['lotus-nlte'],
-    python_requires="==3.7",
+    python_requires=">= 3.7, < 3.8",
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRA_REQUIRE,
