@@ -25,7 +25,7 @@ The quickest way to get started is to use [pip](https://pip.pypa.io):
 ```bash
 python -m pip install lotus-nlte
 ```
-Notice that _LOTUS_ requires Python 3.7. You might create an independent environment to run this code.
+Notice that _LOTUS_ requires Python 3.7.*. You might create an independent environment to run this code.
 
 ## Usage
 

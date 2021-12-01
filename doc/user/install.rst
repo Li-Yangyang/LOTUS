@@ -3,7 +3,7 @@
 Installation
 ============
 
-.. note:: ``LOTUS`` requires Python 3.7.
+.. note:: ``LOTUS`` requires Python 3.7.*
 
 This code uses ``Theano`` as backend tool to realize MCMC sampling via
 ``PyMC3`` but ``Theano`` has been deprecated after version 1.0.5 and has been
