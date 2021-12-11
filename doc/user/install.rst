@@ -31,7 +31,7 @@ The recommended method of installing *LOTUS* is with `pip
 
 .. code-block:: bash
 
-      python -m pip install lotus-nlte==0.1.1rc2
+      python -m pip install lotus-nlte==0.1.1rc3
 
 .. _source:
 
@@ -63,6 +63,7 @@ The following dependencies are required to install it successfully:
 - `matplotlib <https://matplotlib.org/>`_>=3.1.3 (for plotting)
 - `tqdm <https://tqdm.github.io/>`_
 - `corner <https://corner.readthedocs.io/en/latest/>`_
+- `requests <https://docs.python-requests.org/en/latest/>`_
 
 The rest will be installed as well but are used for future more ways of
 interpolation:
