@@ -72,8 +72,8 @@ html_copy_source = True
 html_show_sourcelink = True
 html_sourcelink_suffix = ""
 html_title = "LOTUS"
-#html_logo = "_static/logo.png"
-#html_favicon = "_static/favicon.png"
+html_logo = "_static/logo.png"
+html_favicon = "_static/favicon.png"
 html_static_path = ['_static']
 html_theme_options = {
     "path_to_docs": "doc",
