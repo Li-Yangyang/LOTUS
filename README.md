@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="20%" src="https://raw.githubusercontent.com/Li-Yangyang/LOTUS/main/docs/_static/logo.png">
+  <img width="20%" src="https://raw.githubusercontent.com/Li-Yangyang/LOTUS/main/doc/_static/logo.png">
   <br><br>
   <a href="lotus-nlte.readthedocs.io/en/latest/">
     <img src="https://readthedocs.org/projects/lotus_nlte/badge/?version=latest" alt="Docs">
