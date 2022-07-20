@@ -1,7 +1,7 @@
 <p align="center">
   <img width="20%" src="https://raw.githubusercontent.com/Li-Yangyang/LOTUS/main/doc/_static/logo.png">
   <br><br>
-  <a href="lotus-nlte.readthedocs.io/en/latest/">
+  <a href="http://lotus-nlte.readthedocs.io">
     <img src="https://readthedocs.org/projects/lotus_nlte/badge/?version=latest" alt="Docs">
   </a>
   <a href="https://github.com/Li-Yangyang/LOTUS/blob/main/LICENSE">
