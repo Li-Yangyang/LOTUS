@@ -7,6 +7,9 @@
   <a href="https://github.com/Li-Yangyang/LOTUS/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
   </a>
+  <a href="https://arxiv.org/abs/2207.09415">
+    <img src="https://img.shields.io/badge/Arxiv-2207.09415-orange.svg" alt="Arxiv">
+  </a>
 </p>
 
 # LOTUS
@@ -40,4 +43,24 @@ report an issue or clone this repository to your local end to contribute any cha
 
 ## Attribution
 
-If you use _LOTUS_ in your research, please cite
+Our paper has been submitted to _The Astronomical Journal_ and is being peer-reviewed. We also post it on arxiv and we will update citation after being accepted. If you use _LOTUS_ in your research, please cite:
+
+.. code-block:: tex
+
+    @ARTICLE{2022arXiv220709415L,
+       author = {{Li}, Yangyang and {Ezzeddine}, Rana},
+        title = "{LOTUS: A (non-)LTE Optimization Tool for Uniform derivation of Stellar atmospheric parameters}",
+      journal = {arXiv e-prints},
+     keywords = {Astrophysics - Solar and Stellar Astrophysics, Astrophysics - Instrumentation and Methods for Astrophysics},
+         year = 2022,
+        month = jul,
+          eid = {arXiv:2207.09415},
+        pages = {arXiv:2207.09415},
+archivePrefix = {arXiv},
+       eprint = {2207.09415},
+ primaryClass = {astro-ph.SR},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2022arXiv220709415L},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+    }
+
+
