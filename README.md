@@ -45,7 +45,6 @@ report an issue or clone this repository to your local end to contribute any cha
 
 Our paper has been submitted to _The Astronomical Journal_ and is being peer-reviewed. We also post it on arxiv and we will update citation after being accepted. If you use _LOTUS_ in your research, please cite:
 
-.. code-block:: tex
 
     @ARTICLE{2022arXiv220709415L,
        author = {{Li}, Yangyang and {Ezzeddine}, Rana},
