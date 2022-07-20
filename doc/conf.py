@@ -1,7 +1,7 @@
 from pkg_resources import DistributionNotFound, get_distribution
 
 try:
-    __version__ = get_distribution("emcee").version
+    __version__ = get_distribution("lotus-nlte").version
 except DistributionNotFound:
     __version__ = "unknown version"
 # Configuration file for the Sphinx documentation builder.
