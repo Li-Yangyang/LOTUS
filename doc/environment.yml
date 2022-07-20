@@ -11,7 +11,7 @@ dependencies:
   - pandas==0.24.2
   - sphinx>=1.6
   - pandoc
-  - nbconvert!=5.4
+  - nbconvert>=6.4.3
   - ipykernel
   - pip
   - pip:
