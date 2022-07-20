@@ -56,9 +56,9 @@ Our paper has been submitted to _The Astronomical Journal_ and is being peer-rev
         month = jul,
           eid = {arXiv:2207.09415},
         pages = {arXiv:2207.09415},
-archivePrefix = {arXiv},
+     archivePrefix = {arXiv},
        eprint = {2207.09415},
- primaryClass = {astro-ph.SR},
+     primaryClass = {astro-ph.SR},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2022arXiv220709415L},
       adsnote = {Provided by the SAO/NASA Astrophysics Data System}
     }
