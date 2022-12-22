@@ -96,8 +96,11 @@ def find_closest_model(wl, ep, ele, search_path, interp_method, interpolation, t
             if interpolation:
                 fname = glob.glob(search_path + line + "_" + interp_method + ".sav")
             else:
-                names = tarfile.getnames()
-                fname = list(filter(lambda x: search_path + line in x, names))
+                if tarfile == None:
+                    fname = glob.glob(search_path + line + "_" + interp_method + ".sav")
+                else:
+                    names = tarfile.getnames()
+                    fname = list(filter(lambda x: search_path + line in x, names))
             if len(fname) > 0:
                 return fname
     
