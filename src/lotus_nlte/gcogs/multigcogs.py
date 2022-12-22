@@ -19,6 +19,7 @@ from .gcog import SingleGCOG
 from .utils import *
 
 #from ..interpolation import *
+from ..interpolation.multipoly_interp import MultivariatePolynomialInterpolation, ewdiff
 from ..config import *
 from ..utils import generate_ranges
 
@@ -53,10 +54,10 @@ class MultiGCOG:
 
     __slots__ = ['star', 'stellar_type', 'exp_cutoff', "obs_wavelength", "obs_ep",
                  "obs_ele", "obs_ew", "cal", "models", "interp_method",
-                 "ewlibpath", "working_dir", "interpolation"]
+                 "ewlibpath", "working_dir", "interpolation", "use_tarfile"]
 
     def __init__(self, star, stellar_type, obs_path, cal="nlte", exp_cutoff=0,
-                 ewlibpath=None, interpolation=False):
+                 ewlibpath=None, interpolation=False, use_tarfile=True):
         self.star = star
         self.stellar_type = stellar_type
         self.exp_cutoff = exp_cutoff
@@ -67,25 +68,26 @@ class MultiGCOG:
 
         self.cal = cal
         self.interpolation = interpolation
+        self.use_tarfile = use_tarfile
 
 
         if not self.interpolation:
             print("All optimizations are based on exist interpolated models and you don't need to interpolate them!")
-
-            if self.cal == "lte":
-                self.interptar_path = GCOG_LTE_LIB
+            if self.use_tarfile:
+                if self.cal == "lte":
+                    self.interptar_path = GCOG_LTE_LIB
+                else:
+                    self.interptar_path = GCOG_NLTE_LIB
+                interptar = tarfile.open(self.interptar_path)
+                self.working_dir = interptar.getnames()[0] + "/" + self.stellar_type + "/"
             else:
-                self.interptar_path = GCOG_NLTE_LIB
-            interptar = tarfile.open(self.interptar_path)
-            self.working_dir = interptar.getnames()[0] + "/" + self.stellar_type + "/"
+                self.interptar_path = None
+                self.working_dir = GCOG_DIR + self.cal + "/" + self.stellar_type + "/"
         else:
             if not self.ewlibpath:
                 raise ValueError("Please assign your EW library!")
             else:
-                if self.cal == "lte":
-                    self.working_dir = GCOG_LTE_DIR + self.stellar_type + "/"
-                else:
-                    self.working_dir = GCOG_NLTE_DIR + self.stellar_type + "/"
+                self.working_dir = GCOG_DIR + self.cal + "/" + self.stellar_type + "/"
 
                 self._keys, self._ini_cents = get_keys_and_atmos_pars(self.ewlibpath, self.stellar_type)
 
@@ -103,8 +105,9 @@ class MultiGCOG:
         """
         #generate gcog or select gcog for each lines
 
-        if not os.path.exists(self.working_dir) and self.interpolation :
-            os.makedirs(self.working_dir)
+        if self.interpolation :
+            if not os.path.exists(self.working_dir):
+                os.makedirs(self.working_dir)
             self._select_observed_gcogs()
 
 
@@ -113,8 +116,14 @@ class MultiGCOG:
             #for later persistent prediction
         else:
             if self.interp_method == "[2-5]":
-                interptar = tarfile.open(self.interptar_path)
-                difftar = tarfile.open(self.difftar_path)
+                if self.use_tarfile:
+                    interptar = tarfile.open(self.interptar_path)
+                    difftar = tarfile.open(self.difftar_path)
+                    handle = [interptar]
+                else:
+                    interptar = self.interptar_path
+                    difftar = None
+                    handle = []
             exist_mask = []
             for i in range(len(self.obs_wavelength)):
                 fname = find_closest_model(self.obs_wavelength[i], self.obs_ep[i],
@@ -122,8 +131,9 @@ class MultiGCOG:
                                            self.interp_method, self.interpolation,
                                            interptar)
                 if len(fname) > 0:
-                    m = self._load_model([interptar, fname[0]])
-                    line = fname[0].split("/")[4].split(".sav")[0][:-2]
+                    handle.append(fname[0])
+                    m = self._load_model(handle)
+                    line = fname[0].split("/")[-1].split(".sav")[0][:-2]
                     if self._if_correct_interp(line, m, difftar):
                         self.models.append(m)
                         if self.interp_method == "SKIGP":
@@ -137,6 +147,7 @@ class MultiGCOG:
                         print("Hypersurface of line {0:.2f}A with ep={1:.2f}ev of element {2:s} exists but doesn't pass test of interpolation".format(self.obs_wavelength[i],
                                                                                      self.obs_ep[i],
                                                                                      self.obs_ele[i]))
+                    del handle[-1] 
                 else:
                     try:
                         exist_mask.append(self._select_one_observed_gcogs(i))
@@ -152,7 +163,6 @@ class MultiGCOG:
                                                                                                  self.obs_ep[i],
                                                                                                  self.obs_ele[i]))
                         exist_mask.append(False)
-
 
             self._update_obslinelist(exist_mask)
             #self.models = np.array(self.models)
@@ -226,7 +236,8 @@ class MultiGCOG:
         """
         #TODO:parallelism this funciton?
         sg = SingleGCOG(self.obs_wavelength[i],self.obs_ep[i], self.obs_ele[i],
-                        self.stellar_type, self.ewlibpath, self.cal, self._keys, self._ini_cents)
+                        self.stellar_type, self.cal, interpolated=False, ewlibpath=self.ewlibpath,
+                        keys=self._keys, atmos_pars=self._ini_cents)
         s = sg.assemble_hyper_surface()
 
         if isinstance(s, np.ndarray):
@@ -343,28 +354,32 @@ class PolyMultiGCOG(MultiGCOG):
         the line doesn't pass the precision test
 
     """
-    from ..interpolation.multipoly_interp import MultivariatePolynomialInterpolation
     def __init__(self, star, stellar_type, obs_path, exp_cutoff=0, ew_error=5,
                  ewlibpath=None,
                  ewdiffpath=None,
                  interpolation=False,
+                 use_tarfile=True,
                  cal="nlte"):
 
         self.ewdiffpath = ewdiffpath
         self.ew_error = ew_error
         super(PolyMultiGCOG, self).__init__(star, stellar_type, obs_path, cal,
-                         exp_cutoff, ewlibpath, interpolation)
+                         exp_cutoff, ewlibpath, interpolation, use_tarfile)
         #create directory for save the polynomial test files
         self.interp_method = "[2-5]"
         if interpolation:
-            if not os.path.exists(self.ewdiffpath+self.stellar_type):
-                os.makedirs(self.ewdiffpath+self.stellar_type)
+            self.diff_working_path = self.ewdiffpath + self.cal + "/" + self.stellar_type + "/"
+            if not os.path.exists(self.diff_working_path):
+                os.makedirs(self.diff_working_path)
         else:
-            self.difftar_path = EWDIFF_LIB
+            if self.use_tarfile:
+                self.difftar_path = EWDIFF_LIB
+            else:
+                self.diff_working_path = self.ewdiffpath + self.cal + "/" + self.stellar_type + "/"
 
     def _load_model(self, handle):
-        if isinstance(handle, str):
-            return joblib.load(handle)
+        if isinstance(handle[0], str):
+            return joblib.load(handle[0])
         if isinstance(handle[0], tarfile.TarFile) and isinstance(handle[1], str):
             return joblib.load(handle[0].extractfile(handle[1]))
         raise TypeError("Your model files path or type is not correct.")
@@ -394,7 +409,7 @@ class PolyMultiGCOG(MultiGCOG):
         fmodel = self.working_dir + format(wl, ".2f") \
             +"_"+ format(ep, ".2f") +"_" + ele + "_" + str(final_n) + ".sav"
         joblib.dump(final_model, fmodel)
-        fewdiff_df = self.ewdiffpath + self.stellar_type + "/" + format(wl, ".2f") \
+        fewdiff_df = self.diff_working_path + "/" + format(wl, ".2f") \
             +"_"+ format(ep, ".2f") +"_" + ele  + ".csv"
         if not os.path.isfile(fewdiff_df):
             final_ewdiff_df.to_csv(fewdiff_df)
@@ -403,7 +418,7 @@ class PolyMultiGCOG(MultiGCOG):
 
     def _if_correct_interp(self, line, m, difftar=None):
         if self.interpolation:
-            ewdiff_file = self.ewdiffpath + self.stellar_type + "/" + line + ".csv"
+            ewdiff_file = self.diff_working_path + "/" + line + ".csv"
             if os.path.isfile(ewdiff_file):
                 ewdiff_df = pd.read_csv(ewdiff_file)
                 if "delta_" + self.cal in ewdiff_df and "EW_" + self.cal in ewdiff_df:
@@ -423,9 +438,14 @@ class PolyMultiGCOG(MultiGCOG):
                 mean, std = ewdiff_df["delta_"+self.cal].mean(), ewdiff_df["delta_"+self.cal].std()
 
         else:
-            ewdiff_file = difftar.getnames()[0] + "/" + self.stellar_type + "/" + line + ".csv"
-            ewdiff_df = pd.read_csv(difftar.extractfile(ewdiff_file))
-            mean, std = ewdiff_df["delta_"+self.cal].mean(), ewdiff_df["delta_"+self.cal].std()
+            if difftar != None:
+                ewdiff_file = difftar.getnames()[0] + "/" + self.stellar_type + "/" + line + ".csv"
+                ewdiff_df = pd.read_csv(difftar.extractfile(ewdiff_file))
+                mean, std = ewdiff_df["delta_"+self.cal].mean(), ewdiff_df["delta_"+self.cal].std()
+            else:
+                ewdiff_file = self.diff_working_path + "/" + line + ".csv"
+                ewdiff_df = pd.read_csv(ewdiff_file)
+                mean, std = ewdiff_df["delta_"+self.cal].mean(), ewdiff_df["delta_"+self.cal].std()
 
         del ewdiff_df
         if (((mean+std)<self.ew_error) & ((mean-std)>-self.ew_error)):
