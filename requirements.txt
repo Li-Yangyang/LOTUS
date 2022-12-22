@@ -1,7 +1,7 @@
 cython==0.29.24
 numpy>=1.16.4
 pandas==0.24.2
-pytables==3.7.0
+tables==3.7.0
 hdf5==1.12.1
 scipy>=1.5.0
 sympy>=1.6.2
