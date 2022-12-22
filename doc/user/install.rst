@@ -49,8 +49,10 @@ From Source
 
 The following dependencies are required to install it successfully:
 
+- `cython <https://cython.org/>`_ ==0.29.24
 - `numpy <https://numpy.org>`_>=1.16.4
 - `pandas <https://pandas.pydata.org/>`_ ==0.24.2
+- `tables <https://www.pytables.org/>`_ ==3.7.0
 - `scipy <https://scipy.org/>`_>=1.5.0
 - `scikit-learn <https://scikit-learn.org/stable/>`_ ==0.23.2
 - `sympy <https://www.sympy.org/en/index.html>`_>=1.6.2
