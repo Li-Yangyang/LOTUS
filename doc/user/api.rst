@@ -6,7 +6,7 @@ API documentation
 GCOG
 ------
 
-.. autoclass:: lotus_nlte.gcogs.SingleGCOG
+.. autoclass:: lotus_nlte.gcogs.gcog.SingleGCOG
    :inherited-members:
 
 .. autoclass:: lotus_nlte.gcogs.MultiGCOG
