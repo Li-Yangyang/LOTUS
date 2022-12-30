@@ -43,3 +43,4 @@ Contents
 
    tutorials/quickstart.ipynb
    tutorials/examples.ipynb
+   tutorials/InterpolationAtAnyRanges.ipynb
