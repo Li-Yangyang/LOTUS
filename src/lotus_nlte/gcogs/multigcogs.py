@@ -49,7 +49,10 @@ class MultiGCOG:
     interpolation: bool, default: False
         True: use interpolated GCOG
         False: get GCOG from EW library
-        
+    use_tarfle: bool, default: True
+        True: use compressed version of GCOG models
+        False: not use the compressed tarfile and this might specify the path for GCOG models or 
+               generate a new directory for storing generated GCOG models from EW library if interpolation==False          
     """
 
     __slots__ = ['star', 'stellar_type', 'exp_cutoff', "obs_wavelength", "obs_ep",

@@ -35,6 +35,8 @@ class SingleGCOG:
             {spectral type, e.g. F, G, K}/{giant or subgiant or dwarf}/{metal_rich or metal_poor or very_metal_poor} or
         the estimation of your atmospheric parameters in such form:
             {T_low}_{T_high}/{logg_low}_{logg_high}/{[Fe/H]_low}_{[Fe/H]_high}
+    cal: str
+        Types of EW, e.g. "lte" or "nlte"
     interpolated: bool, optional
         True: use interpolated GCOG
         False: get GCOG from EW library
@@ -49,9 +51,6 @@ class SingleGCOG:
         if ``interpolted==False``, this should be the target keys of ewlib, 
         the shape of the list is (N_selected_gridpoints, 4)
         if ``interpolated==True``, this can be None
-
-    cal: str
-        Types of EW, e.g. "lte" or "nlte"
         
     """
 
