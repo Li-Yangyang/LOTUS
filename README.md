@@ -27,7 +27,7 @@ Full documentation at [lotus-nlte.readthedocs.io](https://lotus-nlte.readthedocs
 The quickest way to get started is to use [pip](https://pip.pypa.io):
 
 ```bash
-python -m pip install lotus-nlte==0.1.1rc3
+python -m pip install lotus-nlte==0.1.1
 ```
 Notice that _LOTUS_ requires Python 3.7.*. You might create an independent environment to run this code.
 
